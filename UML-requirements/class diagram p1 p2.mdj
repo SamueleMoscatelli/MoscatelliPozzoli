@@ -19770,7 +19770,7 @@
 													"top": 47,
 													"width": 67.7890625,
 													"height": 13,
-													"text": ":EndUser"
+													"text": ":User"
 												},
 												{
 													"_type": "LabelView",
@@ -20905,7 +20905,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFt9A7HvsksbHo="
 							},
-							"name": ":EndUser",
+							"name": ":User",
 							"represent": {
 								"$ref": "AAAAAAFt9A9UvcmBe8o="
 							},
