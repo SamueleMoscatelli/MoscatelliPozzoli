@@ -7,12 +7,17 @@ sig Authority extends User {
 violations: set ViolationData,
 notifications: set ViolationData,
 checked: set ViolationData,
-warned: set ViolationData
+warned: set ViolationData,
+assignedArea: set Position
 }
 sig ViolationData {
-violation: one Violation
+violation: one Violation,
+position: one Position
 }
-sig Violation {}
+sig Violation {
+position: Position
+}
+sig Position {}
 
 --FACT
 --1. a checked violation cannot be in notifications
@@ -23,12 +28,10 @@ all a: Authority |
  (vd in a.checked implies not(vd in a.notifications))
 }
 
---2. a checked violation cannot be in notifications of other authorities and 
---also in their checked
+--2. a checked violation cannot be in checked by other authorities
 fact {
-all vd: ViolationData |
-no disj a1, a2: Authority |
-  ((vd in a1.checked) implies not (vd in a2.checked)) 
+all vd: ViolationData, a1, a2: Authority |
+  not ((a1 != a2 and vd in a1.checked) implies (vd in a2.checked)) 
 }
 
 --3. all ViolationData must be in all authority.violations
@@ -73,36 +76,67 @@ all vd: ViolationData, eu: EndUser |
 (vd in eu.violationsSent) <=> (vd.violation in eu.violationsSeen)
 }
 
+--9. all violationdata must be in a.notifications only if vd.position in 
+--a.assignedarea
+fact {
+all vd: ViolationData, a: Authority |
+(vd in a.notifications) <=> (vd.position in a.assignedArea)
+}
+
+--10. all violationdata.position must be equal to violationdata.violatio.position
+fact {
+all vd: ViolationData, v: Violation |
+(vd.violation = v) <=> (vd.position = v.position)
+}
 
 --PREDICATES
 --1. an end user sees a new violation and sends it
 pred seeViolation [v: Violation, vd: ViolationData, eu, eu': EndUser] {
 eu'.violationsSeen = eu.violationsSeen + v
-vd.violation = v
 eu'.violationsSent = eu.violationsSent + vd
 }
 
-
-pred show [v: Violation, vd: ViolationData, eu, eu': EndUser] {
-seeViolation [v, vd, eu, eu']
+--2. an authority checks a violationdata
+pred checkViolation [a, a': Authority, vd: ViolationData] {
+a'.checked = a.checked + vd
+a'.notifications = a.notifications - vd
 }
---run show for 15
+
+
+pred show  [a, a': Authority, vd: ViolationData] {
+checkViolation [a, a', vd]
+}
+--run show for 5
 
 
 --ASSERTIONS
 --1. if a end user sees and send a violation, the violation must be 
 --viewable by all the authorities
 assert viewSentViolation {
-all a: Authority |
- one v: Violation, vd: ViolationData, eu, eu': EndUser |
+all a: Authority, v: Violation, vd: ViolationData, eu, eu': EndUser |
 seeViolation [v, vd, eu, eu'] implies
             vd in a.violations
 }
+--check viewSentViolation for 3
 
-check viewSentViolation for 3
+--2. if an end user send a new violationdata, another end user cannot see it
+assert seeAnotherUserSentViolation {
+all vd: ViolationData, v: Violation |
+no eu1, eu1', eu2: EndUser |
+(seeViolation [v, vd, eu1, eu1'] and eu1 != eu2 and eu1' != eu2 and
+(eu1'.violationsSent & eu2.violationsSent != none))
+}
+--check seeAnotherUserSentViolation for 10
 
-
-
+--3. if an authority checks a violationdata another authority cannot check the 
+-- same violationdata
+assert doubleCheck {
+all vd: ViolationData |
+no a1, a1', a2: Authority |
+  (a1 != a2 and a1' != a2 and checkViolation [a1, a1', vd] and 
+        (a1'.checked & a2.checked != none))
+}
+--check doubleCheck for 10
 
 
 
