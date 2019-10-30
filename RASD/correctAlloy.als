@@ -23,15 +23,15 @@ sig Position {}
 --1. a checked violation cannot be in notifications
 fact {
 all a: Authority |
- all vd: ViolationData |
- (vd in a.notifications implies not(vd in a.checked)) or
- (vd in a.checked implies not(vd in a.notifications))
+ no vd: ViolationData |
+ vd in a.notifications and vd in a.checked
 }
 
 --2. a checked violation cannot be in checked by other authorities
 fact {
-all vd: ViolationData, a1, a2: Authority |
-  not ((a1 != a2 and vd in a1.checked) implies (vd in a2.checked)) 
+all vd: ViolationData |
+no disj a1, a2: Authority |
+  vd in a1.checked and vd in a2.checked
 }
 
 --3. all ViolationData must be in all authority.violations
@@ -43,17 +43,15 @@ all a: Authority |
 --4. all ViolationData in a.checked cannot be also in a.warned and viceversa
 fact {
 all a: Authority |
- all vd: ViolationData |
- (vd in a.warned implies not(vd in a.checked)) or
- (vd in a.checked implies not(vd in a.warned))
+ no vd: ViolationData |
+ vd in a.warned and vd in a.checked
 }
 
 --5. all ViolationData in  a.warned cannot be in a.notifications
 fact {
 all a: Authority |
- all vd: ViolationData |
- (vd in a.notifications implies not(vd in a.warned)) or
- (vd in a.warned implies not(vd in a.notifications))
+ no vd: ViolationData |
+  vd in a.notifications and vd in a.warned
 }
 
 --6. all ViolationData must be in one user.violationsSent
@@ -79,11 +77,11 @@ all vd: ViolationData, eu: EndUser |
 --9. all violationdata must be in a.notifications only if vd.position in 
 --a.assignedarea
 fact {
-all vd: ViolationData, a: Authority |
-(vd in a.notifications) <=> (vd.position in a.assignedArea)
+all a: Authority, vd: ViolationData |
+(vd in a.notifications) iff (vd.position in a.assignedArea)
 }
 
---10. all violationdata.position must be equal to violationdata.violatio.position
+--10. all violationdata.position must be equal to violationdata.violation.position
 fact {
 all vd: ViolationData, v: Violation |
 (vd.violation = v) <=> (vd.position = v.position)
@@ -92,19 +90,36 @@ all vd: ViolationData, v: Violation |
 --PREDICATES
 --1. an end user sees a new violation and sends it
 pred seeViolation [v: Violation, vd: ViolationData, eu, eu': EndUser] {
+--preconditions
+vd not in eu.violationsSent
+v not in eu.violationsSeen
+--postconditions
 eu'.violationsSeen = eu.violationsSeen + v
 eu'.violationsSent = eu.violationsSent + vd
 }
 
 --2. an authority checks a violationdata
 pred checkViolation [a, a': Authority, vd: ViolationData] {
+--preconditions
+vd not in a.checked
+vd in a.notifications
+--postconditions
 a'.checked = a.checked + vd
 a'.notifications = a.notifications - vd
 }
 
+--3. authority notified
+pred notifyAuthority [a, a': Authority, vd: ViolationData] {
+--preconditions
+vd.position in a.assignedArea
+--postconditions
+a'.notifications = a.notifications + vd
+}
 
-pred show  [a, a': Authority, vd: ViolationData] {
-checkViolation [a, a', vd]
+
+pred show [a, a': Authority, vd: ViolationData] {
+#Authority>2
+notifyAuthority [a, a', vd]
 }
 --run show for 5
 
@@ -138,6 +153,16 @@ no a1, a1', a2: Authority |
 }
 --check doubleCheck for 10
 
+--4. if a violationdata is notified to an authoritiy it must be notified to all the 
+-- other authorities assigned to an area which comprehend the position of the 
+-- violation
+assert allInterestedAuthoritiesNotified {
+all a1, a1', a2: Authority, vd: ViolationData |
+ (notifyAuthority [a1, a1', vd] and a1 != a2 and a1' != a2 and
+   vd.position in a2.assignedArea) implies
+							(vd in a2.notifications)
+}
+--check allInterestedAuthoritiesNotified for 3
 
 
 
