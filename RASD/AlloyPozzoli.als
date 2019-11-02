@@ -159,6 +159,15 @@ notifyAuthority [a, a', vd]
 }
 --run show for 5
 
+--4. a new unsafearea is detected 
+pred newUnsafeArea [mun, mun': Municipality, ua: UnsafeArea]{
+--preconditions
+ua not in mun.unsafeareas
+mun.territory = mun'.territory
+--postconditions
+mun'.unsafeareas = mun.unsafeareas + ua
+}
+
 
 --ASSERTIONS
 --1. if a end user sees and send a violation, the violation must be 
