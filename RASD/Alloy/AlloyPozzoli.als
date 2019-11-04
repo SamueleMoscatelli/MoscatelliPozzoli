@@ -113,7 +113,7 @@ no disj mun1, mun2: Municipality |
 --13. positions in unsafearea must be in the same territory
 fact{
 all ua: UnsafeArea, mun: Municipality |
-(au.area & mun.territory) = au.area
+(ua.area & mun.territory) = ua.area
 }
 
 --14. all interventions must be in at least one usafearea
