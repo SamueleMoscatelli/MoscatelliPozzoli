@@ -19,14 +19,13 @@ position: Position
 }
 sig Position {}
 sig Municipality extends User{
-territory: set Position,
 unsafeareas: set UnsafeArea
 }
-Sig UnsafeArea{
+sig UnsafeArea{
 area: set Position,
 intervention: lone Intervention
 }
-Sig Intervention{}
+sig Intervention{}
 
 
 --FACT
@@ -97,31 +96,33 @@ all vd: ViolationData, v: Violation |
 (vd.violation = v) <=> (vd.position = v.position)
 }
 
---11. two diferent municipality cannot have the same territory and a position cannot be
---in two different territories
-fact{
-no disj mun1, mun2: Municipality |
-(mun1.territory & mun2.territory) != none
-}
-
---12. two different municipality cannot have the same unsafearea
+--11. two different municipality cannot have the same unsafearea
 fact{
 no disj mun1, mun2: Municipality |
 (mun1.unsafeareas & mun2.unsafeareas) != none
 }
 
---13. positions in unsafearea must be in the same territory
+--12. unsafe area must be in a municipality
 fact{
-all ua: UnsafeArea, mun: Municipality |
-(ua.area & mun.territory) = ua.area
+all ua: UnsafeArea | 
+some mun: Municipality |
+ua in mun.unsafeareas
 }
 
---14. all interventions must be in at least one usafearea
+--13. all interventions must be in at least one usafearea
 fact{
 all inte: Intervention |
 some ua: UnsafeArea |
 inte in ua.intervention
 }
+
+--14. two different unsafeareas cannot have the same area
+fact{
+no disj ua1, ua2: UnsafeArea |
+(ua1.area & ua2.area) != none
+}
+
+
 
 --PREDICATES
 --1. an end user sees a new violation and sends it
@@ -163,9 +164,13 @@ notifyAuthority [a, a', vd]
 pred newUnsafeArea [mun, mun': Municipality, ua: UnsafeArea]{
 --preconditions
 ua not in mun.unsafeareas
-mun.territory = mun'.territory
 --postconditions
 mun'.unsafeareas = mun.unsafeareas + ua
+}
+
+pred show2 [mun, mun': Municipality, ua: UnsafeArea]{
+#Municipality>2
+newUnsafeArea [mun, mun', ua]
 }
 
 
