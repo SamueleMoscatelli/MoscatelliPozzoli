@@ -214,5 +214,10 @@ all a1, a1', a2: Authority, vd: ViolationData |
 }
 --check allInterestedAuthoritiesNotified for 3
 
-
+assert onlyOneMunicipalityAssociated{
+all mun, mun1: Municipality, ua: UnsafeArea |
+newUnsafeArea [mun, mun1, ua] implies
+(ua & in mun1.unsafeareas and ua not in mun.unsafeareas)
+}
+--check onlyOneMunicipalityAssociated for 5
 
