@@ -214,10 +214,11 @@ all a1, a1', a2: Authority, vd: ViolationData |
 }
 --check allInterestedAuthoritiesNotified for 3
 
+--5. if a new UnsafeArea is inserted, it is associated to only one municipality
 assert onlyOneMunicipalityAssociated{
-all mun, mun1: Municipality, ua: UnsafeArea |
-newUnsafeArea [mun, mun1, ua] implies
-(ua & in mun1.unsafeareas and ua not in mun.unsafeareas)
+all mun, mun1, mun2: Municipality, ua: UnsafeArea |
+(newUnsafeArea [mun, mun1, ua] and mun1!=mun2) implies
+(ua in mun1.unsafeareas and ua not in mun.unsafeareas and ua not in mun2.unsafeareas)
 }
 --check onlyOneMunicipalityAssociated for 5
 
