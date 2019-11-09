@@ -121,6 +121,12 @@ fact{
 no disj ua1, ua2: UnsafeArea |
 (ua1.area & ua2.area) != none
 }
+--15. all unsafe area must have at least one position
+fact{
+all ua: UnsafeArea |
+some pos: Position |
+pos in ua.area
+}
 
 
 
@@ -135,6 +141,8 @@ eu'.violationsSeen = eu.violationsSeen + v
 eu'.violationsSent = eu.violationsSent + vd
 }
 
+--run seeViolation for 5 but exactly 3 EndUser, exactly 1 UnsafeArea, exactly 1 Authority, exactly 3 ViolationData
+
 --2. an authority checks a violationdata
 pred checkViolation [a, a': Authority, vd: ViolationData] {
 --preconditions
@@ -144,6 +152,7 @@ vd in a.notifications
 a'.checked = a.checked + vd
 a'.notifications = a.notifications - vd
 }
+run checkViolation for 3 but exactly 2 Authority, exactly 3 ViolationData, exactly 1 EndUser
 
 --3. authority notified
 pred notifyAuthority [a, a': Authority, vd: ViolationData] {
@@ -154,11 +163,13 @@ a'.notifications = a.notifications + vd
 }
 
 
-pred show [a, a': Authority, vd: ViolationData] {
+pred show [v: Violation, vd: ViolationData, eu, eu': EndUser] {
 #Authority>2
-notifyAuthority [a, a', vd]
+#ViolationData>1
+#UnsafeArea>1
+seeViolation [v, vd, eu, eu']
 }
---run show for 5
+--run show for 7 but 3 Authority
 
 --4. a new unsafearea is detected 
 pred newUnsafeArea [mun, mun': Municipality, ua: UnsafeArea]{
