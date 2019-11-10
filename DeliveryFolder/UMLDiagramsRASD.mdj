@@ -8540,7 +8540,8 @@
 										"$ref": "AAAAAAFuUPpIJzc1wSA="
 									},
 									"name": "position",
-									"visibility": "private"
+									"visibility": "private",
+									"type": ""
 								}
 							]
 						}
@@ -17549,17 +17550,6 @@
 									"name": "SequenceDiagramAuthorityNotified",
 									"ownedViews": [
 										{
-											"_type": "RectangleView",
-											"_id": "AAAAAAFuSoAxj5Pp+os=",
-											"_parent": {
-												"$ref": "AAAAAAFuSoAxj5Q321E="
-											},
-											"font": "Arial;13;0",
-											"top": 24,
-											"width": 921,
-											"height": 697
-										},
-										{
 											"_type": "UMLFrameView",
 											"_id": "AAAAAAFuSoAxj5Psz3c=",
 											"_parent": {
@@ -19372,18 +19362,6 @@
 									"name": "SequenceDiagramAuthorityVerify",
 									"ownedViews": [
 										{
-											"_type": "RectangleView",
-											"_id": "AAAAAAFuSoAxn5RO2S4=",
-											"_parent": {
-												"$ref": "AAAAAAFuSoAxn5SbwYY="
-											},
-											"font": "Arial;13;0",
-											"left": 24,
-											"top": 32,
-											"width": 913,
-											"height": 681
-										},
-										{
 											"_type": "UMLFrameView",
 											"_id": "AAAAAAFuSoAxn5RRIFE=",
 											"_parent": {
@@ -20359,12 +20337,12 @@
 													"_parent": {
 														"$ref": "AAAAAAFuSoAxn5SE82A="
 													},
+													"visible": false,
 													"font": "Arial;13;0",
 													"left": 315.578125,
 													"top": 373,
-													"width": 105.7744140625,
-													"height": 13,
-													"text": "For each authority"
+													"width": 1,
+													"height": 13
 												},
 												{
 													"_type": "LabelView",
@@ -20405,11 +20383,12 @@
 																	"_parent": {
 																		"$ref": "AAAAAAFuSoAxn5SCIUM="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"left": 300,
 																	"top": 406,
-																	"height": 13
+																	"width": 111.998046875,
+																	"height": 13,
+																	"text": "[For each authority]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -21080,7 +21059,6 @@
 									"_parent": {
 										"$ref": "AAAAAAFuSoAxn5SrwaM="
 									},
-									"name": "For each authority",
 									"interactionOperator": "loop",
 									"operands": [
 										{
@@ -21089,7 +21067,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFuSoAxn5SqtiE="
 											},
-											"name": "Operand1"
+											"name": "Operand1",
+											"guard": "For each authority"
 										}
 									]
 								}
@@ -45415,12 +45394,12 @@
 													"_parent": {
 														"$ref": "AAAAAAFuSoVU9M6UBNY="
 													},
+													"visible": false,
 													"font": "Arial;13;0",
 													"left": 176.72998046875,
 													"top": 325,
-													"width": 234.40966796875,
-													"height": 13,
-													"text": "If there are past contributions of the user"
+													"width": 1,
+													"height": 13
 												},
 												{
 													"_type": "LabelView",
@@ -45461,11 +45440,12 @@
 																	"_parent": {
 																		"$ref": "AAAAAAFuSoVU9M6Q3/Y="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"left": 172,
 																	"top": 358,
-																	"height": 13
+																	"width": 240.63330078125,
+																	"height": 13,
+																	"text": "[If there are past contributions of the user]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -45919,7 +45899,6 @@
 									"_parent": {
 										"$ref": "AAAAAAFuSoVU9M6uQaI="
 									},
-									"name": "If there are past contributions of the user",
 									"interactionOperator": "alt",
 									"operands": [
 										{
@@ -45928,7 +45907,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFuSoVU9M6trFQ="
 											},
-											"name": "Operand1"
+											"name": "Operand1",
+											"guard": "If there are past contributions of the user"
 										},
 										{
 											"_type": "UMLInteractionOperand",
