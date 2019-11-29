@@ -21820,7 +21820,7 @@
 											"top": 275,
 											"width": 368.21923828125,
 											"height": 13,
-											"text": "+showStatistics(): Statistics",
+											"text": "+showStatistics(): Statistic",
 											"horizontalAlignment": 0
 										}
 									],
@@ -25312,7 +25312,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFuspa+YkXQKJ0="
 									},
-									"type": "Statistics",
+									"type": {
+										"$ref": "AAAAAAFudQuKeg1lic8="
+									},
 									"direction": "return"
 								}
 							]
