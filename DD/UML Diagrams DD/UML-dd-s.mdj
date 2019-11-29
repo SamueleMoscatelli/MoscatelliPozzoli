@@ -22280,7 +22280,7 @@
 											"top": 579,
 											"width": 360.49609375,
 											"height": 13,
-											"text": "+showStatistics(): Statistics",
+											"text": "+showStatistics(): Statistic",
 											"horizontalAlignment": 0
 										}
 									],
@@ -22510,7 +22510,7 @@
 											"top": 731,
 											"width": 395.5986328125,
 											"height": 13,
-											"text": "+showStatistics(): Statistics",
+											"text": "+showStatistics(): Statistic",
 											"horizontalAlignment": 0
 										}
 									],
@@ -25538,7 +25538,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFuspepvUXar3c="
 									},
-									"type": "Statistics",
+									"type": {
+										"$ref": "AAAAAAFudQuKeg1lic8="
+									},
 									"direction": "return"
 								}
 							]
@@ -25652,7 +25654,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFuspffQ0XjuiY="
 									},
-									"type": "Statistics",
+									"type": {
+										"$ref": "AAAAAAFudQuKeg1lic8="
+									},
 									"direction": "return"
 								}
 							]
